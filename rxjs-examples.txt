@@ -1,26 +1,139 @@
-https://stackblitz.com/run?devtoolsheight=50
-https://rxjs-dev.firebaseapp.com/guide/overview
+<h1>RxJS playground</h1>
 
-import { fromEvent, Observable, interval, Subject } from 'rxjs';
-import { throttleTime, map, scan, filter, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+<p>Open the console below to see results</p>
+<button>Click me!</button>
+<input id="input1"/>
+<input id="input2"/>
+
+<p>Combined Value: <span></span></p>
+<div></div>
+
+
+
+
+import { fromEvent, Observable, interval, Subject, BehaviorSubject, of } from 'rxjs';
+import { throttleTime, map, scan, filter, debounceTime, distinctUntilChanged, reduce, pluck, mergeMap,switchMap } from 'rxjs/operators';
 
 const button = document.querySelector('button');
-const input = document.querySelector('input');
-//6: debounceTime & distinctUntilChanged
+const input = document.querySelector('#input1');
+const input2 = document.querySelector('#input2');
+const span = document.querySelector('span');
+const div = document.querySelector('div');
 
-const observable = fromEvent(input, 'input');
+//11:behaviorSubject()
+const clickEmitter = new BehaviorSubject("Not Clicked!");
+
+button.addEventListener('click', () => {
+  clickEmitter.next('Clicked!')
+})
   
-  observable
-  .pipe(
-    map(event => event.target.value),
-    debounceTime(500),
-    distinctUntilChanged()
-  )
-  .subscribe({
-    next: function (value) {
-      console.log(value);
-    }
-  })
+clickEmitter
+.subscribe(
+  (value: string) => { div.textContent = value }
+);
+
+
+
+
+
+// //10:switchMap()
+
+// const obs1 = fromEvent(button, 'click');
+
+// const obs2 = interval(1000);
+  
+// obs1.pipe(
+//   switchMap(
+//     event => {
+//       return obs2
+//     }
+//   )
+// )
+// .subscribe(
+//   (value) => console.log(value)
+// )
+
+
+// //9:mergeMap()
+
+// const obs1 = fromEvent(input, 'input');
+
+// const obs2 = fromEvent(input2, 'input');
+  
+// obs1.pipe(
+//   mergeMap((event1) => {
+//     return obs2.pipe(map((event2) => {
+//       return event1.target.value + " " + event2.target.value
+//     }))
+//   })
+// )
+// .subscribe(conmbinedVal => {
+//   span.textContent = conmbinedVal;
+//   // console.log(conmbinedVal);
+// })
+
+
+// 8:pluck()
+// const observable = fromEvent(input, 'input');
+  
+//   observable
+//   .pipe(
+//     pluck('target', 'value'),
+//     debounceTime(500),
+//     distinctUntilChanged()
+//   )
+//   .subscribe({
+//     next: function (value) {
+//       console.log(value);
+//     }
+//   })
+
+
+
+//7:reduce(), scan()
+
+// const observable = of(1,2,3,4,5);
+  
+//   observable
+//   .pipe(
+//     scan((total, currentValue) => {
+//       return total + currentValue;
+//     }, 0)
+//   )
+//   .subscribe({
+//     next: function (value) {
+//       console.log(value);
+//     }
+//   })
+
+  // observable
+  // .pipe(
+  //   reduce((total, currentValue) => {
+  //     return total + currentValue;
+  //   }, 0)
+  // )
+  // .subscribe({
+  //   next: function (value) {
+  //     console.log(value);
+  //   }
+  // })
+
+
+// //6: debounceTime & distinctUntilChanged
+
+// const observable = fromEvent(input, 'input');
+  
+//   observable
+//   .pipe(
+//     map(event => event.target.value),
+//     debounceTime(500),
+//     distinctUntilChanged()
+//   )
+//   .subscribe({
+//     next: function (value) {
+//       console.log(value);
+//     }
+//   })
 
 //5) filter(): Lecture
 // const observabel = interval(1000);
